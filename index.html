@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>제철만들기</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game-container">
+  <div id="header">
+    <div id="score-box">
+      <span class="label">SCORE</span>
+      <span id="score">0</span>
+    </div>
+    <h1>제철만들기</h1>
+    <div id="next-box">
+      <span class="label">NEXT</span>
+      <span id="next-preview"></span>
+    </div>
+  </div>
+  <canvas id="game-canvas" width="400" height="600"></canvas>
+  <div id="game-over-overlay" class="hidden">
+    <div class="game-over-content">
+      <h2>게임 오버</h2>
+      <p>최종 점수: <span id="final-score">0</span></p>
+      <button id="restart-btn">다시 시작</button>
+    </div>
+  </div>
+</div>
+<div id="evolution-chart">
+  <p class="chart-title">진화 트리</p>
+  <div id="chart-items"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
