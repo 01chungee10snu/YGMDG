@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-06-22T20:28:47+0900",
+  "theme": "eco-friendly green steel mill / low-carbon steelmaking / existing Yonggang face preserved",
+  "assets": [
+    {
+      "file": "assets/generated/yonggang-mascot.png",
+      "sourceUrl": "https://v3b.fal.media/files/b/0a9f4fa1/e9uWrr2ELjI_JbqTBKNBs_dgZAsMOw.png",
+      "bytes": 690910
+    },
+    {
+      "file": "assets/generated/value-chain-sprites.png",
+      "sourceUrl": "https://v3b.fal.media/files/b/0a9f4fa2/jTNslVwXR7ENaezyzZN3C_N8pY9G0m.png",
+      "bytes": 518306
+    },
+    {
+      "file": "assets/generated/factory-background.png",
+      "sourceUrl": "https://v3b.fal.media/files/b/0a9f4fa3/ciXv6I9CgldG4ydn46ALU_AJJJ7NVd.png",
+      "bytes": 1023783
+    }
+  ]
+}

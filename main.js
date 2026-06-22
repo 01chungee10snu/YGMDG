@@ -6,6 +6,9 @@ const { Engine, World, Bodies, Body, Events, Composite, Vector } = Matter;
 
 const GAME_DATA = window.YONGGANG_GAME_DATA;
 const TIERS = GAME_DATA.tiers;
+const PHYSICS_RULE = GAME_DATA.physics || { renderScale: 1 };
+const RECIPE_QUIZZES = GAME_DATA.recipeQuizzes || [];
+const RECIPE_RULE = GAME_DATA.recipeQuiz || { triggerEveryMerges: 4, firstTriggerMerge: 3, secondsPerCharacter: 3, correctBonusPerCharacter: 100 };
 const MAX_TIER = TIERS.length - 1;
 const CANVAS_W = 420;
 const CANVAS_H = 640;
@@ -28,6 +31,13 @@ let dropLineY = 58;
 let initialized = false;
 let frameCount = 0;
 let startedAt = Date.now();
+let quizActive = false;
+let activeQuiz = null;
+let quizDeadline = 0;
+let quizTimer = null;
+let quizCorrectCount = 0;
+let quizFailReason = '';
+const askedQuizIndexes = new Set();
 const effects = [];
 const overLineFrames = new Map();
 const images = {};
@@ -35,6 +45,7 @@ const images = {};
 function init() {
   if (initialized) return;
   initialized = true;
+  validateTierPhysicsPolicy();
   canvas = document.getElementById('game-canvas');
   ctx = canvas.getContext('2d');
   resizeCanvasForDpr();
@@ -51,6 +62,7 @@ function init() {
   setupInput();
   setupCollision();
   setupKeyboard();
+  setupRecipeQuiz();
 
   currentTier = pickRandomTier();
   nextTier = pickRandomTier();
@@ -73,6 +85,8 @@ function resizeCanvasForDpr() {
 function loadImages() {
   images.mascot = new Image();
   images.mascot.src = 'assets/generated/yonggang-mascot.png';
+  images.sprites = new Image();
+  images.sprites.src = 'assets/generated/value-chain-sprites.png';
   images.background = new Image();
   images.background.src = 'assets/generated/factory-background.png';
 }
@@ -99,7 +113,8 @@ function createWalls() {
 
 function createPart(x, y, tierIndex, extra = {}) {
   const tier = TIERS[tierIndex];
-  const body = Bodies.circle(x, y, tier.radius, {
+  const collisionRadius = tier.radius;
+  const body = Bodies.circle(x, y, collisionRadius, {
     restitution: tier.restitution,
     friction: tier.friction,
     frictionStatic: 0.82,
@@ -108,6 +123,8 @@ function createPart(x, y, tierIndex, extra = {}) {
     slop: 0.015,
     label: 'part',
     tier: tierIndex,
+    collisionRadius,
+    renderRadius: collisionRadius * (PHYSICS_RULE.renderScale || 1),
     spawnFrame: frameCount,
     justMerged: extra.justMerged || 0,
     renderAngle: Math.random() * Math.PI * 2
@@ -116,8 +133,26 @@ function createPart(x, y, tierIndex, extra = {}) {
   return body;
 }
 
+function validateTierPhysicsPolicy() {
+  for (let i = 1; i < TIERS.length; i++) {
+    const prev = TIERS[i - 1];
+    const tier = TIERS[i];
+    if (!(tier.radius > prev.radius)) {
+      throw new Error(`tier radius must strictly increase: ${prev.id}=${prev.radius}, ${tier.id}=${tier.radius}`);
+    }
+    const prevNominalMass = Math.PI * prev.radius * prev.radius * prev.density;
+    const nominalMass = Math.PI * tier.radius * tier.radius * tier.density;
+    if (!(nominalMass > prevNominalMass)) {
+      throw new Error(`tier nominal mass must strictly increase: ${prev.id}=${prevNominalMass.toFixed(4)}, ${tier.id}=${nominalMass.toFixed(4)}`);
+    }
+    if (!(tier.density >= prev.density * 0.75)) {
+      throw new Error(`tier density dropped too sharply: ${prev.id}=${prev.density}, ${tier.id}=${tier.density}`);
+    }
+  }
+}
+
 function dropItem() {
-  if (!canDrop || gameOver) return;
+  if (!canDrop || gameOver || quizActive) return;
   const tier = TIERS[currentTier];
   const x = clamp(mouseX, WALL_THICKNESS + tier.radius, CANVAS_W - WALL_THICKNESS - tier.radius);
   const body = createPart(x, dropLineY, currentTier);
@@ -166,6 +201,115 @@ function mergeParts(a, b) {
   updateScore();
   playMergeEffect(mid.x, mid.y, newTier);
   if (newTier === MAX_TIER) playYonggangBurst(mid.x, mid.y);
+  if (shouldTriggerRecipeQuiz()) setTimeout(startRecipeQuiz, 180);
+}
+
+function setupRecipeQuiz() {
+  const form = document.getElementById('recipe-quiz-card');
+  if (!form) return;
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitRecipeQuiz();
+  });
+}
+
+function shouldTriggerRecipeQuiz() {
+  if (quizActive || gameOver || RECIPE_QUIZZES.length === 0) return false;
+  const first = RECIPE_RULE.firstTriggerMerge || 3;
+  const every = RECIPE_RULE.triggerEveryMerges || 4;
+  return mergeCount >= first && (mergeCount - first) % every === 0;
+}
+
+function pickRecipeQuiz() {
+  if (askedQuizIndexes.size >= RECIPE_QUIZZES.length) askedQuizIndexes.clear();
+  const start = mergeCount % RECIPE_QUIZZES.length;
+  for (let offset = 0; offset < RECIPE_QUIZZES.length; offset++) {
+    const index = (start + offset) % RECIPE_QUIZZES.length;
+    if (!askedQuizIndexes.has(index)) {
+      askedQuizIndexes.add(index);
+      return { ...RECIPE_QUIZZES[index], index };
+    }
+  }
+  return { ...RECIPE_QUIZZES[0], index: 0 };
+}
+
+function answerCharCount(answer) {
+  return [...String(answer || '').replace(/\s/g, '')].length;
+}
+
+function normalizeAnswer(value) {
+  return String(value || '').trim().replace(/\s/g, '').toLocaleLowerCase('ko-KR');
+}
+
+function startRecipeQuiz() {
+  if (quizActive || gameOver) return;
+  activeQuiz = pickRecipeQuiz();
+  const charCount = answerCharCount(activeQuiz.answer);
+  const seconds = activeQuiz.timeLimitSeconds || charCount * (RECIPE_RULE.secondsPerCharacter || 3);
+  activeQuiz.timeLimitSeconds = seconds;
+  quizActive = true;
+  canDrop = false;
+  quizDeadline = performance.now() + seconds * 1000;
+
+  const overlay = document.getElementById('recipe-quiz-overlay');
+  const prompt = document.getElementById('recipe-quiz-prompt');
+  const input = document.getElementById('recipe-quiz-input');
+  const help = document.getElementById('recipe-quiz-help');
+  const status = document.getElementById('recipe-quiz-status');
+  prompt.textContent = activeQuiz.prompt;
+  input.value = '';
+  input.maxLength = Math.max(8, charCount + 4);
+  help.textContent = `정답 ${charCount}글자 × 3초 = ${seconds}초`;
+  status.textContent = '오답 또는 시간초과 시 GAME OVER DEAD';
+  overlay.classList.remove('hidden');
+  input.focus();
+  updateRecipeTimer();
+  clearInterval(quizTimer);
+  quizTimer = setInterval(updateRecipeTimer, 100);
+}
+
+function updateRecipeTimer() {
+  if (!quizActive || !activeQuiz) return;
+  const remainingMs = Math.max(0, quizDeadline - performance.now());
+  const remainingSeconds = remainingMs / 1000;
+  const total = activeQuiz.timeLimitSeconds || 1;
+  const ratio = Math.max(0, Math.min(1, remainingSeconds / total));
+  document.getElementById('recipe-quiz-countdown').textContent = `${remainingSeconds.toFixed(1)}초`;
+  document.querySelector('#recipe-quiz-timer span').style.transform = `scaleX(${ratio})`;
+  if (remainingMs <= 0) failRecipeQuiz('timeout');
+}
+
+function submitRecipeQuiz() {
+  if (!quizActive || !activeQuiz) return;
+  const input = document.getElementById('recipe-quiz-input');
+  const actual = normalizeAnswer(input.value);
+  const expected = normalizeAnswer(activeQuiz.answer);
+  if (actual !== expected) {
+    failRecipeQuiz('wrong-answer');
+    return;
+  }
+  clearRecipeQuizTimer();
+  quizCorrectCount += 1;
+  const bonus = answerCharCount(activeQuiz.answer) * (RECIPE_RULE.correctBonusPerCharacter || 100);
+  score += bonus;
+  updateScore();
+  document.getElementById('recipe-quiz-overlay').classList.add('hidden');
+  activeQuiz = null;
+  quizActive = false;
+  canDrop = true;
+}
+
+function failRecipeQuiz(reason) {
+  if (!quizActive && gameOver) return;
+  quizFailReason = reason;
+  clearRecipeQuizTimer();
+  document.getElementById('recipe-quiz-status').textContent = reason === 'timeout' ? '시간초과: GAME OVER DEAD' : '오답: GAME OVER DEAD';
+  triggerGameOver('quiz-dead');
+}
+
+function clearRecipeQuizTimer() {
+  clearInterval(quizTimer);
+  quizTimer = null;
 }
 
 function updateScore() {
@@ -201,7 +345,9 @@ async function recordGameResult() {
     score,
     maxTier: TIERS[maxTierReached].name,
     durationMs: Date.now() - startedAt,
-    mergeCount
+    mergeCount,
+    quizCorrectCount,
+    quizFailReason
   };
   localStorage.setItem('yonggang:lastResult', JSON.stringify(payload));
   const endpoint = GAME_DATA.googleSheets.endpoint;
@@ -273,7 +419,7 @@ function drawEffects() {
 }
 
 function checkGameOver() {
-  if (gameOver) return;
+  if (gameOver || quizActive) return;
   const bodies = Composite.allBodies(world);
   for (const body of bodies) {
     if (body.label !== 'part') continue;
@@ -282,7 +428,7 @@ function checkGameOver() {
       overLineFrames.delete(body.id);
       continue;
     }
-    const over = body.position.y - TIERS[body.tier].radius < GAME_OVER_LINE;
+    const over = body.position.y - (body.collisionRadius || TIERS[body.tier].radius) < GAME_OVER_LINE;
     if (!over) {
       overLineFrames.delete(body.id);
       continue;
@@ -296,8 +442,14 @@ function checkGameOver() {
   }
 }
 
-async function triggerGameOver() {
+async function triggerGameOver(reason = 'overline') {
   gameOver = true;
+  quizActive = false;
+  clearRecipeQuizTimer();
+  document.getElementById('recipe-quiz-overlay').classList.add('hidden');
+  const isQuizDead = reason === 'quiz-dead';
+  document.getElementById('game-over-title').textContent = isQuizDead ? (RECIPE_RULE.failTitle || 'GAME OVER DEAD') : '공정 과밀';
+  document.getElementById('game-over-message').textContent = isQuizDead ? (RECIPE_RULE.failMessage || '제철 레시피 입력퀴즈 실패.') : '용강까지 이어지는 흐름을 다시 설계하십시오.';
   document.getElementById('final-score').textContent = score.toLocaleString('ko-KR');
   document.getElementById('game-over-overlay').classList.remove('hidden');
   const result = await recordGameResult();
@@ -312,6 +464,12 @@ function restart() {
   mergeCount = 0;
   maxTierReached = 0;
   gameOver = false;
+  quizActive = false;
+  activeQuiz = null;
+  quizCorrectCount = 0;
+  quizFailReason = '';
+  askedQuizIndexes.clear();
+  clearRecipeQuizTimer();
   canDrop = true;
   frameCount = 0;
   startedAt = Date.now();
@@ -322,6 +480,9 @@ function restart() {
   updateScore();
   updateNextPreview();
   updateDbStatus();
+  document.getElementById('recipe-quiz-overlay').classList.add('hidden');
+  document.getElementById('game-over-title').textContent = '공정 과밀';
+  document.getElementById('game-over-message').textContent = '용강까지 이어지는 흐름을 다시 설계하십시오.';
   document.getElementById('game-over-overlay').classList.add('hidden');
 }
 
@@ -372,7 +533,7 @@ function drawBackground() {
 function drawPart(body) {
   const tier = TIERS[body.tier];
   const { x, y } = body.position;
-  const r = tier.radius;
+  const r = body.renderRadius || tier.radius;
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(body.angle * 0.3 + body.renderAngle * 0.06);
@@ -383,14 +544,36 @@ function drawPart(body) {
     body.justMerged--;
   }
 
-  if (body.tier === MAX_TIER && images.mascot.complete && images.mascot.naturalWidth) {
-    ctx.drawImage(images.mascot, -r, -r, r * 2, r * 2);
+  if (drawTierSprite(body.tier, r)) {
     ctx.restore();
     return;
   }
 
   drawIndustrialShape(tier, r);
   ctx.restore();
+}
+
+function drawTierSprite(tierIndex, r) {
+  if (!images.sprites || !images.sprites.complete || !images.sprites.naturalWidth) return false;
+  const cols = 4;
+  const rows = 3;
+  const cellW = images.sprites.naturalWidth / cols;
+  const cellH = images.sprites.naturalHeight / rows;
+  const col = tierIndex % cols;
+  const row = Math.floor(tierIndex / cols);
+  const pad = r * 0.12;
+  ctx.drawImage(
+    images.sprites,
+    col * cellW,
+    row * cellH,
+    cellW,
+    cellH,
+    -r - pad,
+    -r - pad,
+    r * 2 + pad * 2,
+    r * 2 + pad * 2
+  );
+  return true;
 }
 
 function drawIndustrialShape(tier, r) {
@@ -402,16 +585,14 @@ function drawIndustrialShape(tier, r) {
   ctx.strokeStyle = tier.edge;
   ctx.lineWidth = Math.max(2, r * 0.055);
 
-  if (['casting', 'hot_rolled'].includes(tier.id)) {
+  if (['casting', 'hot_rolled', 'cold_auto_sheet', 'heavy_plate'].includes(tier.id)) {
     roundRect(-r * 0.88, -r * 0.48, r * 1.76, r * 0.96, r * 0.16);
     ctx.fill(); ctx.stroke();
-  } else if (tier.id === 'section_steel') {
+  } else if (tier.id === 'long_special_products') {
     drawHBeam(r);
-  } else if (tier.id === 'special_steel') {
-    drawStar(r * 0.95, 5);
+  } else if (tier.id === 'yonggang') {
+    drawStar(r * 0.95, 6);
     ctx.fill(); ctx.stroke();
-  } else if (tier.id === 'final_goods') {
-    drawCity(r);
   } else {
     ctx.beginPath();
     ctx.arc(0, 0, r, 0, Math.PI * 2);
@@ -442,7 +623,7 @@ function drawPreview() {
   ctx.save();
   ctx.globalAlpha = 0.55;
   ctx.translate(x, dropLineY);
-  drawIndustrialShape(tier, tier.radius);
+  if (!drawTierSprite(currentTier, tier.radius)) drawIndustrialShape(tier, tier.radius);
   ctx.restore();
 
   ctx.save();
@@ -519,7 +700,7 @@ function lightenColor(hex, amount) {
 function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
 function gameLoop() {
-  Engine.update(engine, 1000 / 60);
+  if (!quizActive && !gameOver) Engine.update(engine, 1000 / 60);
   updateEffects();
   drawBackground();
   drawGameOverLine();

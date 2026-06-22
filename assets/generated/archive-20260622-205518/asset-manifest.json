@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-06-22T20:29:57+0900",
+  "theme": "eco-friendly green steel mill, no text/no UI, original Yonggang face preserved",
+  "modelIntent": "GPT-image style high-quality game assets via Hermes image generation",
+  "assets": [
+    {
+      "file": "assets/generated/yonggang-mascot.png",
+      "sourceUrl": "https://v3b.fal.media/files/b/0a9f4fa8/_ZURYUX-acmjOSOkiPZqE_XJPneX2r.png",
+      "bytes": 520303
+    },
+    {
+      "file": "assets/generated/value-chain-sprites.png",
+      "sourceUrl": "https://v3b.fal.media/files/b/0a9f4fa9/DWL-buNOxWl3R0kiBn-uV_NmwdHHLb.png",
+      "bytes": 413465
+    },
+    {
+      "file": "assets/generated/factory-background.png",
+      "sourceUrl": "https://v3b.fal.media/files/b/0a9f4faa/fb7Np4TD5Ost4g9Ycu2ZD_F8jg4r0r.png",
+      "bytes": 1091292
+    }
+  ]
+}

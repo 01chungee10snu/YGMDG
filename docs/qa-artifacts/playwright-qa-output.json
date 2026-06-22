@@ -1,0 +1,51 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "title": "용강 만들기",
+  "initialScore": "0",
+  "canvasBox": {
+    "x": 150,
+    "y": 97,
+    "width": 420,
+    "height": 640
+  },
+  "wrongHelp": "정답 2글자 × 3초 = 6초",
+  "wrongTitle": "GAME OVER DEAD",
+  "wrongMessage": "제철 레시피 입력퀴즈 실패. 같은 편의 안전·협업 레시피를 다시 익히십시오.",
+  "correctPrompt": "업무지시는 ____하게, 회의는 간결하게.",
+  "correctAnswer": "명확",
+  "scoreBeforeCorrect": "0",
+  "scoreAfterCorrect": "200",
+  "timeoutTitle": "GAME OVER DEAD",
+  "imageStatus": [
+    {
+      "src": "assets/generated/yonggang-mascot.png",
+      "complete": true,
+      "naturalWidth": 1024,
+      "naturalHeight": 1024
+    },
+    {
+      "src": "assets/generated/value-chain-sprites.png",
+      "complete": true,
+      "naturalWidth": 1024,
+      "naturalHeight": 576
+    },
+    {
+      "src": "assets/generated/factory-background.png",
+      "complete": true,
+      "naturalWidth": 576,
+      "naturalHeight": 1024
+    }
+  ],
+  "brokenImages": [],
+  "missingExpectedImages": [],
+  "httpFailures": [],
+  "badHttpFailures": [],
+  "consoleErrorsOrWarnings": [],
+  "pageErrors": [],
+  "screenshots": [
+    "/Users/01chungee10/projects/sujak-maker-game/docs/qa-artifacts/01-load.png",
+    "/Users/01chungee10/projects/sujak-maker-game/docs/qa-artifacts/02-wrong-answer-game-over-dead.png",
+    "/Users/01chungee10/projects/sujak-maker-game/docs/qa-artifacts/03-correct-answer-resume.png",
+    "/Users/01chungee10/projects/sujak-maker-game/docs/qa-artifacts/04-timeout-game-over-dead.png"
+  ]
+}

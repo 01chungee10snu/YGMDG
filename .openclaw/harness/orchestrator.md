@@ -28,6 +28,6 @@
 
 ## Google Sheets DB 계약
 기록 행 스키마는 다음 순서를 유지한다.
-`timestamp, player, score, maxTier, durationMs, mergeCount`
+`timestamp, player, score, maxTier, durationMs, mergeCount, quizCorrectCount, quizFailReason`
 
 프런트엔드는 Apps Script Web App endpoint가 `data/game-data.js`의 `googleSheets.endpoint`에 들어오면 POST를 시도하고, 없거나 실패하면 `localStorage`에 fallback 기록을 남긴다.

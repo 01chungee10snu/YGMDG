@@ -13,34 +13,49 @@
 1. 철광석
 2. 석탄
 3. 코크스
-4. 제선공정
-5. 쇳물
-6. 제강공정
-7. 연주·반제품
-8. 열연강판
-9. 형강·봉강
-10. 특수강·내연
-11. 자동차·가전·건물
+4. 고로 제선공정
+5. 용선·쇳물 운반
+6. 전로 제강공정
+7. 연속주조·반제품
+8. 열연코일
+9. 냉연·도금 자동차강판
+10. 후판
+11. 형강·철근·레일·특수강 대표 제품군
 12. 용강
+
+## 철강 제조공정·제품 기준
+- 공정 흐름은 고로 일관제철 기준으로 `철광석/석탄 → 코크스 → 고로 제선 → 용선 → 전로 제강 → 연속주조 → 압연/후처리 → 대표 제품` 순서를 따른다.
+- 대표 제품군은 현대제철 제품군을 참고해 열연, 냉연·도금/자동차강판, 후판, H형강·철근·레일 등 봉형강, 특수강을 반영한다.
+- 아이콘은 각 티어가 공정 장비인지, 반제품인지, 최종 제품군인지 시각적으로 구분되도록 12개 개별 PNG와 4×3 스프라이트 시트로 관리한다.
 
 ## 게임플레이
 - 같은 티어끼리 충돌하면 다음 티어로 병합된다.
 - 최종 목표는 용강 얼굴을 만드는 것이다.
 - 물리엔진은 기존보다 높은 반복 계산, 티어별 밀도/마찰/반발 계수를 사용한다.
 - 공정 한계선 위에서 안정적으로 오래 정체되면 게임오버가 된다.
+- 병합 3회째부터 4회 간격으로 `제철레시피 입력퀴즈`가 뜬다.
+- 퀴즈 중에는 물리 진행과 드롭을 잠시 멈춘다.
+- 정답 제한시간은 정답 글자 수 × 3초다. 예: `현대제철` 4글자 → 12초.
+- 오답 또는 시간초과 시 즉시 `GAME OVER DEAD`가 된다.
+
+## 점수 체계
+- 병합 점수 산식: `roundTo5((2 ** (tierIndex + 1)) * 10 * processMultiplier)`.
+- 티어별 점수: 철광석 20, 석탄 40, 코크스 90, 제선공정 200, 쇳물 430, 제강공정 990, 연주·반제품 2,175, 열연강판 4,865, 형강·봉강 10,750, 특수강·내연 24,575, 자동차·가전·건물 56,320, 용강 135,170.
+- 제철레시피 정답 보너스: 정답 글자 수 × 100점.
 
 ## 데이터베이스
 - 기본 DB: Google Sheets.
 - 생성된 시트: https://docs.google.com/spreadsheets/d/1bdcRVCFmTrgMUi-CFj28E-AknJjqb8HxHghfyU_XuB8/edit
 - Spreadsheet ID: `1bdcRVCFmTrgMUi-CFj28E-AknJjqb8HxHghfyU_XuB8`
-- 현재 프런트엔드 스키마: `timestamp, player, score, maxTier, durationMs, mergeCount`.
+- 현재 프런트엔드 스키마: `timestamp, player, score, maxTier, durationMs, mergeCount, quizCorrectCount, quizFailReason`.
 - Sheets endpoint가 없을 때는 `localStorage.yonggang:lastResult`에 fallback 저장한다.
 
 ## 이미지 자산
 - GPT 이미지 생성 사용.
 - 생성 파일:
   - `assets/generated/yonggang-mascot.png`
-  - `assets/generated/value-chain-sprites.png`
+  - `assets/generated/value-chain-sprites.png` — 4×3 공정 정확도 기반 스프라이트 시트
+  - `assets/generated/components/01-iron-ore.png` ~ `assets/generated/components/12-yonggang-final.png` — 개별 티어 아이콘
   - `assets/generated/factory-background.png`
 
 ## 검증 기준
