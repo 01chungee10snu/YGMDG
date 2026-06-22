@@ -561,7 +561,14 @@ function drawTierSprite(tierIndex, r) {
   const cellH = images.sprites.naturalHeight / rows;
   const col = tierIndex % cols;
   const row = Math.floor(tierIndex / cols);
-  const pad = r * 0.12;
+
+  // Circular clipping so square sprite cells render as orbs
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.clip();
+
+  const pad = r * 0.06;
   ctx.drawImage(
     images.sprites,
     col * cellW,
@@ -573,10 +580,22 @@ function drawTierSprite(tierIndex, r) {
     r * 2 + pad * 2,
     r * 2 + pad * 2
   );
+  ctx.restore();
+
+  // Glossy rim for 3D orb definition
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = Math.max(1, r * 0.035);
+  ctx.beginPath();
+  ctx.arc(0, 0, r - 1, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
   return true;
 }
 
 function drawIndustrialShape(tier, r) {
+  // All tiers render as 3D sphere/orb with gradient + highlight
   const grad = ctx.createRadialGradient(-r * 0.35, -r * 0.38, r * 0.08, 0, 0, r);
   grad.addColorStop(0, lightenColor(tier.color, 48));
   grad.addColorStop(0.68, tier.color);
@@ -585,25 +604,35 @@ function drawIndustrialShape(tier, r) {
   ctx.strokeStyle = tier.edge;
   ctx.lineWidth = Math.max(2, r * 0.055);
 
-  if (['casting', 'hot_rolled', 'cold_auto_sheet', 'heavy_plate'].includes(tier.id)) {
-    roundRect(-r * 0.88, -r * 0.48, r * 1.76, r * 0.96, r * 0.16);
-    ctx.fill(); ctx.stroke();
-  } else if (tier.id === 'long_special_products') {
-    drawHBeam(r);
-  } else if (tier.id === 'yonggang') {
-    drawStar(r * 0.95, 6);
-    ctx.fill(); ctx.stroke();
-  } else {
-    ctx.beginPath();
-    ctx.arc(0, 0, r, 0, Math.PI * 2);
-    ctx.fill(); ctx.stroke();
-  }
-
-  ctx.fillStyle = 'rgba(255,255,255,0.24)';
+  // Always draw circle (orb shape)
   ctx.beginPath();
-  ctx.arc(-r * 0.34, -r * 0.36, r * 0.22, 0, Math.PI * 2);
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // 3D specular highlight (top-left gloss)
+  const hgrad = ctx.createRadialGradient(-r * 0.38, -r * 0.42, r * 0.02, -r * 0.38, -r * 0.42, r * 0.5);
+  hgrad.addColorStop(0, 'rgba(255,255,255,0.42)');
+  hgrad.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = hgrad;
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
   ctx.fill();
 
+  // Inner highlight dot
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.beginPath();
+  ctx.arc(-r * 0.35, -r * 0.38, r * 0.12, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Rim light (bottom-right subtle glow)
+  ctx.strokeStyle = lightenColor(tier.color, 30);
+  ctx.lineWidth = Math.max(1, r * 0.03);
+  ctx.beginPath();
+  ctx.arc(0, 0, r - ctx.lineWidth, 0.15 * Math.PI, 0.85 * Math.PI);
+  ctx.stroke();
+
+  // Icon
   ctx.fillStyle = '#fff8e8';
   ctx.font = `800 ${Math.max(13, r * 0.38)}px system-ui, sans-serif`;
   ctx.textAlign = 'center';
@@ -611,6 +640,7 @@ function drawIndustrialShape(tier, r) {
   ctx.shadowColor = 'rgba(0,0,0,.38)';
   ctx.shadowBlur = 3;
   ctx.fillText(tier.icon, 0, -r * 0.10);
+  // Name
   ctx.font = `700 ${Math.max(9, r * 0.17)}px system-ui, sans-serif`;
   ctx.fillText(tier.name, 0, r * 0.45);
   ctx.shadowBlur = 0;
