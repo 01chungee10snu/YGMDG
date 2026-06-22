@@ -3,36 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>제철만들기</title>
+<meta name="description" content="철광석에서 용강 생물까지 이어지는 제철 밸류체인 머지 게임">
+<title>용강 만들기</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="game-container">
-  <div id="header">
-    <div id="score-box">
-      <span class="label">SCORE</span>
-      <span id="score">0</span>
+<main id="app-shell">
+  <section id="game-container" aria-label="용강 만들기 게임">
+    <header id="header">
+      <div id="score-box" class="hud-card">
+        <span class="label">SCORE</span>
+        <span id="score">0</span>
+      </div>
+      <div id="title-box">
+        <p class="eyebrow">STEEL VALUE CHAIN MERGE</p>
+        <h1>용강 만들기</h1>
+      </div>
+      <div id="next-box" class="hud-card">
+        <span class="label">NEXT</span>
+        <span id="next-preview"></span>
+      </div>
+    </header>
+
+    <div id="canvas-wrap">
+      <canvas id="game-canvas" width="420" height="640"></canvas>
+      <div id="game-over-overlay" class="hidden">
+        <div class="game-over-content">
+          <h2>공정 과밀</h2>
+          <p>최종 점수: <span id="final-score">0</span></p>
+          <p class="small">용강까지 이어지는 흐름을 다시 설계하십시오.</p>
+          <button id="restart-btn">다시 시작</button>
+        </div>
+      </div>
     </div>
-    <h1>제철만들기</h1>
-    <div id="next-box">
-      <span class="label">NEXT</span>
-      <span id="next-preview"></span>
-    </div>
-  </div>
-  <canvas id="game-canvas" width="400" height="600"></canvas>
-  <div id="game-over-overlay" class="hidden">
-    <div class="game-over-content">
-      <h2>게임 오버</h2>
-      <p>최종 점수: <span id="final-score">0</span></p>
-      <button id="restart-btn">다시 시작</button>
-    </div>
-  </div>
-</div>
-<div id="evolution-chart">
-  <p class="chart-title">진화 트리</p>
-  <div id="chart-items"></div>
-</div>
+  </section>
+
+  <aside id="info-panel" aria-label="제철 밸류체인 정보">
+    <section class="panel-card mascot-card">
+      <img src="assets/generated/yonggang-mascot.png" alt="최종 목표 캐릭터 용강" id="mascot-img">
+      <div>
+        <p class="label">FINAL LIFEFORM</p>
+        <h2>용강</h2>
+        <p>철광석·석탄·코크스가 공정을 지나 태어나는 주황색 생물입니다.</p>
+      </div>
+    </section>
+    <section class="panel-card">
+      <p class="label">FLOW</p>
+      <div id="evolution-chart"></div>
+    </section>
+    <section class="panel-card sprite-card">
+      <p class="label">GPT IMAGE ASSET</p>
+      <img src="assets/generated/value-chain-sprites.png" alt="제철 밸류체인 오브젝트 스프라이트 시트">
+    </section>
+    <section class="panel-card db-card">
+      <p class="label">DATABASE</p>
+      <p id="db-status">Google Sheets 어댑터 대기 중</p>
+    </section>
+  </aside>
+</main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+<script src="data/game-data.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
