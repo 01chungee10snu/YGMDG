@@ -87,6 +87,13 @@ function check(name, cond, detail = '') {
     await startBtn.click();
     await page.waitForTimeout(2400);
   }
+  const landingOk = page.locator('#landing-ok');
+  if (await landingOk.count()) {
+    const touchHint = page.locator('#touch-hint');
+    if (await touchHint.count()) await touchHint.click();
+    await landingOk.click();
+    await page.waitForTimeout(2400);
+  }
   // Drop a few items to ensure canvas has rendered content
   for (let i = 0; i < 6; i++) {
     await page.mouse.click(120 + i * 40, 120);

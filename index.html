@@ -13,11 +13,21 @@
 </head>
 <body>
 <main id="app-shell">
-  <div id="start-overlay" class="overlay hidden">
-    <div class="start-card">
-      <h1>용강 만들기</h1>
-      <p class="small">철광석부터 용강까지, 제철 밸류체인을 따라 물건을 합성하세요.</p>
-      <button id="start-btn">시작하기</button>
+  <div id="start-overlay" class="overlay">
+    <div class="landing">
+      <div class="landing-title-wrap">
+        <h1 class="landing-title">용강 만들기</h1>
+        <p class="landing-sub">STEEL VALUE CHAIN MERGE</p>
+      </div>
+      <p id="touch-hint" class="landing-hint">Touch to start</p>
+      <div id="landing-rules" class="landing-rules hidden">
+        <h2>게임 방법</h2>
+        <ol>
+          <li>같은 그림을 2개 합쳐서 다음 그림을 만드세요.</li>
+          <li>중간중간 나타나는 제철레시피 퀴즈에 재빠르게 응답하세요.</li>
+        </ol>
+        <button id="landing-ok" type="button">Ok</button>
+      </div>
     </div>
   </div>
   <section id="game-container" aria-label="용강 만들기 게임">

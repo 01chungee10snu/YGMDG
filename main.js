@@ -49,10 +49,20 @@ function init() {
   if (initialized && started) return;
   initialized = true;
   if (!started) {
-    document.getElementById('start-overlay').classList.remove('hidden');
-    document.getElementById('start-btn').addEventListener('click', () => {
+    const overlay = document.getElementById('start-overlay');
+    overlay.classList.remove('hidden');
+    const hint = document.getElementById('touch-hint');
+    const rules = document.getElementById('landing-rules');
+    const okBtn = document.getElementById('landing-ok');
+
+    hint.addEventListener('click', () => {
+      hint.classList.add('hidden');
+      rules.classList.remove('hidden');
+    });
+
+    okBtn.addEventListener('click', () => {
       started = true;
-      document.getElementById('start-overlay').classList.add('hidden');
+      overlay.classList.add('hidden');
       startGameCore();
     });
     return;
@@ -87,7 +97,6 @@ function startGameCore() {
   setupCollision();
   setupKeyboard();
   setupRecipeQuiz();
-  setupInfoPanel();
 
   currentTier = pickRandomTier();
   nextTier = pickRandomTier();
@@ -399,7 +408,31 @@ function renderEvolutionChart() {
     orb.className = 'flow-orb';
     orb.src = withAssetVersion(ORB_ICONS[i]);
     orb.alt = t.name;
+    orb.addEventListener('click', () => openFlowDetail(t));
     container.appendChild(orb);
+  });
+}
+
+function openFlowDetail(tier) {
+  const existing = document.getElementById('flow-detail-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'flow-detail-overlay';
+  overlay.className = 'overlay';
+  overlay.innerHTML = `
+    <div class="flow-detail-card">
+      <h2>${tier.name}</h2>
+      <p class="flow-detail-stage">${tier.stage}</p>
+      <p>${tier.desc}</p>
+      <p class="small">${tier.detailDesc || ''}</p>
+      ${tier.wikiLink ? `<a class="flow-detail-link" href="${tier.wikiLink}" target="_blank" rel="noopener">위키백과/나무위키에서 더보기</a>` : ''}
+      <button type="button" data-close>닫기</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (ev) => {
+    if (ev.target.matches('[data-close]') || ev.target === overlay) overlay.remove();
   });
 }
 
