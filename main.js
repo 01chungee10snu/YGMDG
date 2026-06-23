@@ -31,6 +31,7 @@ let gameOver = false;
 let mouseX = CANVAS_W / 2;
 let dropLineY = 58;
 let initialized = false;
+let started = false;
 let frameCount = 0;
 let startedAt = Date.now();
 let quizActive = false;
@@ -45,8 +46,29 @@ const overLineFrames = new Map();
 const images = {};
 
 function init() {
-  if (initialized) return;
+  if (initialized && started) return;
   initialized = true;
+  if (!started) {
+    document.getElementById('start-overlay').classList.remove('hidden');
+    document.getElementById('start-btn').addEventListener('click', () => {
+      started = true;
+      document.getElementById('start-overlay').classList.add('hidden');
+      startGameCore();
+    });
+    return;
+  }
+  startGameCore();
+}
+
+function startGame() {
+  if (started) return;
+  started = true;
+  document.getElementById('start-overlay').classList.add('hidden');
+  if (!initialized) init();
+  else startGameCore();
+}
+
+function startGameCore() {
   validateTierPhysicsPolicy();
   canvas = document.getElementById('game-canvas');
   ctx = canvas.getContext('2d');
@@ -65,11 +87,13 @@ function init() {
   setupCollision();
   setupKeyboard();
   setupRecipeQuiz();
+  setupInfoPanel();
 
   currentTier = pickRandomTier();
   nextTier = pickRandomTier();
   updateNextPreview();
   renderEvolutionChart();
+  renderTopTierBar();
   updateDbStatus();
   setupLiveUpdateCheck();
 
@@ -327,8 +351,32 @@ function updateScore() {
 }
 
 function updateNextPreview() {
-  const t = TIERS[nextTier];
-  document.getElementById('next-preview').textContent = `${t.icon} ${t.name}`;
+  const box = document.getElementById('next-box');
+  if (box) box.classList.add('hidden');
+}
+
+function renderTopTierBar() {
+  const bar = document.getElementById('tier-bar');
+  if (!bar) return;
+  bar.innerHTML = '';
+  TIERS.forEach((_, i) => {
+    const pip = document.createElement('div');
+    pip.className = `tier-pip ${i <= maxTierReached ? 'active' : ''}`;
+    pip.title = TIERS[i].name;
+    bar.appendChild(pip);
+  });
+}
+
+function setupInfoPanel() {
+  const btn = document.getElementById('info-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    // TODO: replace with dedicated info modal
+    const panel = document.getElementById('info-panel');
+    if (!panel) return;
+    const hidden = panel.classList.toggle('hidden');
+    btn.setAttribute('aria-expanded', String(!hidden));
+  });
 }
 
 const ORB_ICONS = [
@@ -573,6 +621,7 @@ function restart() {
   nextTier = pickRandomTier();
   updateScore();
   updateNextPreview();
+  renderTopTierBar();
   updateDbStatus();
   document.getElementById('recipe-quiz-overlay').classList.add('hidden');
   document.getElementById('game-over-title').textContent = '공정 과밀';

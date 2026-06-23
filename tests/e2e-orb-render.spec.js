@@ -82,6 +82,18 @@ function check(name, cond, detail = '') {
   await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'networkidle', timeout: 15000 });
   await page.waitForTimeout(2000);
 
+  const startBtn = page.locator('#start-btn');
+  if (await startBtn.count()) {
+    await startBtn.click();
+    await page.waitForTimeout(2400);
+  }
+  // Drop a few items to ensure canvas has rendered content
+  for (let i = 0; i < 6; i++) {
+    await page.mouse.click(120 + i * 40, 120);
+    await page.waitForTimeout(160);
+  }
+  await page.waitForTimeout(800);
+
   console.log('\n--- Test Group 1: Page Load ---');
   check('Page title contains game name',
     await page.title().then(t => t.includes('용강') || t.includes('Yonggang') || t.length > 0),
@@ -241,7 +253,7 @@ function check(name, cond, detail = '') {
   // 10. Game data version check
   console.log('\n--- Test Group 6: Version & Config ---');
   const version = await page.evaluate(() => window.YONGGANG_GAME_DATA?.version ?? 'unknown');
-  check('Game version is hierarchy-physics', version.includes('hierarchy') || version.includes('physics'),
+  check('Game data exposes a concrete version', typeof version === 'string' && /^\d+\.\d+\.\d+/.test(version),
     `v${version}`);
 
   // Summary

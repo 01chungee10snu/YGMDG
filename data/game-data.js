@@ -35,7 +35,7 @@ window.YONGGANG_GAME_DATA = {
   recipeQuiz: {
     triggerEveryMerges: 4,
     firstTriggerMerge: 3,
-    secondsPerCharacter: 3,
+    secondsPerCharacter: 2.5,
     correctBonusPerCharacter: 100,
     failTitle: 'GAME OVER DEAD',
     failMessage: '제철 레시피 입력퀴즈 실패. 같은 편의 안전·협업 레시피를 다시 익히십시오.'

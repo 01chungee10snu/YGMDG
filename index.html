@@ -13,6 +13,13 @@
 </head>
 <body>
 <main id="app-shell">
+  <div id="start-overlay" class="overlay hidden">
+    <div class="start-card">
+      <h1>용강 만들기</h1>
+      <p class="small">철광석부터 용강까지, 제철 밸류체인을 따라 물건을 합성하세요.</p>
+      <button id="start-btn">시작하기</button>
+    </div>
+  </div>
   <section id="game-container" aria-label="용강 만들기 게임">
     <header id="header">
       <div id="score-box" class="hud-card">
@@ -23,12 +30,13 @@
         <p class="eyebrow">STEEL VALUE CHAIN MERGE</p>
         <h1>용강 만들기</h1>
       </div>
-      <div id="next-box" class="hud-card">
+      <div id="next-box" class="hud-card hidden">
         <span class="label">NEXT</span>
         <span id="next-preview"></span>
       </div>
+      <button id="info-btn" class="icon-btn" aria-label="정보">i</button>
     </header>
-
+    <div id="tier-bar" class="tier-bar" aria-label="현재 단계"></div>
     <div id="canvas-wrap">
       <canvas id="game-canvas" width="420" height="640"></canvas>
       <div id="recipe-quiz-overlay" class="hidden" aria-live="assertive">
