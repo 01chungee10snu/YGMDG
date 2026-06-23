@@ -371,11 +371,7 @@ function setupInfoPanel() {
   const btn = document.getElementById('info-btn');
   if (!btn) return;
   btn.addEventListener('click', () => {
-    // TODO: replace with dedicated info modal
-    const panel = document.getElementById('info-panel');
-    if (!panel) return;
-    const hidden = panel.classList.toggle('hidden');
-    btn.setAttribute('aria-expanded', String(!hidden));
+    // info panel removed; no-op until dedicated modal is added
   });
 }
 
@@ -395,18 +391,21 @@ const ORB_ICONS = [
 ];
 
 function renderEvolutionChart() {
-  const container = document.getElementById('evolution-chart');
+  const container = document.getElementById('flow-items');
+  if (!container) return;
   container.innerHTML = '';
   TIERS.forEach((t, i) => {
-    const item = document.createElement('div');
-    item.className = `chart-item ${i === MAX_TIER ? 'final' : ''}`;
-    item.innerHTML = `<img class="chart-orb" src="${withAssetVersion(ORB_ICONS[i])}" alt="${t.name}"><div><strong>${t.name}</strong><em>${t.stage}</em></div>`;
-    container.appendChild(item);
+    const orb = document.createElement('img');
+    orb.className = 'flow-orb';
+    orb.src = withAssetVersion(ORB_ICONS[i]);
+    orb.alt = t.name;
+    container.appendChild(orb);
   });
 }
 
 function updateDbStatus() {
   const el = document.getElementById('db-status');
+  if (!el) return;
   const endpoint = GAME_DATA.googleSheets.endpoint;
   el.textContent = endpoint ? 'Google Sheets 연결 준비 완료' : '로컬 기록 우선, Sheets endpoint 주입 대기';
   updateVersionStatus('최신 데이터 확인 중');
