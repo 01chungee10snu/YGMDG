@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "status": {"type": "string"},
+    "output_paths": {"type": "array", "items": {"type": "string"}},
+    "prompt_used": {"type": "string"},
+    "notes": {"type": "string"}
+  },
+  "required": ["status", "output_paths", "prompt_used", "notes"]
+}

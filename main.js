@@ -45,6 +45,25 @@ const effects = [];
 const overLineFrames = new Map();
 const images = {};
 
+// ── 플레이어 정보 ──
+let player = { nickname: '', employeeId: '', highScore: 0, isNew: false };
+let gameStartScore = 0;
+
+function loadStoredPlayer() {
+  try {
+    const stored = JSON.parse(localStorage.getItem('yonggang:player') || 'null');
+    if (stored && stored.nickname && stored.employeeId) return stored;
+  } catch (_) {}
+  return null;
+}
+
+function savePlayer() {
+  localStorage.setItem('yonggang:player', JSON.stringify({
+    nickname: player.nickname,
+    employeeId: player.employeeId
+  }));
+}
+
 function init() {
   if (initialized && started) return;
   initialized = true;
@@ -54,6 +73,8 @@ function init() {
     const hint = document.getElementById('touch-hint');
     const rules = document.getElementById('landing-rules');
     const okBtn = document.getElementById('landing-ok');
+    const loginForm = document.getElementById('landing-login');
+    const loginSubmit = document.getElementById('login-submit');
 
     hint.addEventListener('click', () => {
       hint.classList.add('hidden');
@@ -61,10 +82,32 @@ function init() {
     });
 
     okBtn.addEventListener('click', () => {
-      started = true;
-      overlay.classList.add('hidden');
-      startGameCore();
+      rules.classList.add('hidden');
+      // 기존 플레이어가 있으면 로그인 생략
+      const stored = loadStoredPlayer();
+      if (stored) {
+        player.nickname = stored.nickname;
+        player.employeeId = stored.employeeId;
+        registerAndStart();
+      } else {
+        loginForm.classList.remove('hidden');
+        document.getElementById('input-nickname').focus();
+      }
     });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nickname = document.getElementById('input-nickname').value.trim();
+      const employeeId = document.getElementById('input-employee-id').value.trim();
+      if (!nickname || !employeeId) return;
+      player.nickname = nickname;
+      player.employeeId = employeeId;
+      const btn = document.getElementById('login-submit');
+      btn.textContent = '등록 중...';
+      btn.disabled = true;
+      registerAndStart();
+    });
+
     return;
   }
   startGameCore();
@@ -76,6 +119,37 @@ function startGame() {
   document.getElementById('start-overlay').classList.add('hidden');
   if (!initialized) init();
   else startGameCore();
+}
+
+async function registerAndStart() {
+  const endpoint = GAME_DATA.googleSheets.endpoint;
+  const loginForm = document.getElementById('landing-login');
+  const errEl = document.getElementById('login-error');
+
+  if (endpoint) {
+    try {
+      const url = `${endpoint}?action=register&nickname=${encodeURIComponent(player.nickname)}&employeeId=${encodeURIComponent(player.employeeId)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.status === 'ok') {
+        player.highScore = data.highScore || 0;
+        player.isNew = !!data.isNew;
+        savePlayer();
+      } else {
+        throw new Error(data.message || '등록 실패');
+      }
+    } catch (err) {
+      // 오프라인이면 로컬로 진행
+      console.warn('플레이어 등록 실패, 오프라인 모드', err);
+    }
+  }
+
+  started = true;
+  document.getElementById('start-overlay').classList.add('hidden');
+  if (loginForm) loginForm.classList.add('hidden');
+  if (errEl) errEl.classList.add('hidden');
+  gameStartScore = 0;
+  startGameCore();
 }
 
 function startGameCore() {
@@ -503,9 +577,12 @@ function setupLiveUpdateCheck() {
 
 async function recordGameResult() {
   const payload = {
+    action: 'recordResult',
     timestamp: new Date().toISOString(),
-    player: 'local-player',
-    score,
+    nickname: player.nickname || 'local-player',
+    employeeId: player.employeeId || '',
+    startScore: gameStartScore,
+    endScore: score,
     maxTier: TIERS[maxTierReached].name,
     durationMs: Date.now() - startedAt,
     mergeCount,
@@ -514,19 +591,36 @@ async function recordGameResult() {
   };
   localStorage.setItem('yonggang:lastResult', JSON.stringify(payload));
   const endpoint = GAME_DATA.googleSheets.endpoint;
+
   if (!endpoint) return { mode: 'local', payload };
+
   try {
     await fetch(endpoint, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
+    // no-cors 모드에서는 응답 본문을 읽을 수 없으므로 로컬 비교로 하이스코어 표시
+    showHighScoreInfo();
     return { mode: 'sheets', payload };
   } catch (error) {
     console.warn('Sheets 기록 실패, localStorage fallback 사용', error);
     return { mode: 'local-fallback', payload };
   }
+}
+
+function showHighScoreInfo() {
+  const el = document.getElementById('highscore-info');
+  if (!el) return;
+  const prevHigh = player.highScore;
+  if (score > prevHigh) {
+    el.textContent = `🏆 신기록! (이전 최고: ${prevHigh.toLocaleString('ko-KR')})`;
+    player.highScore = score;
+  } else {
+    el.textContent = `최고 점수: ${prevHigh.toLocaleString('ko-KR')}`;
+  }
+  el.classList.remove('hidden');
 }
 
 function playMergeEffect(x, y, tier) {
@@ -659,6 +753,9 @@ function restart() {
   document.getElementById('game-over-title').textContent = '공정 과밀';
   document.getElementById('game-over-message').textContent = '용강까지 이어지는 흐름을 다시 설계하십시오.';
   document.getElementById('game-over-overlay').classList.add('hidden');
+  const hsEl = document.getElementById('highscore-info');
+  if (hsEl) hsEl.classList.add('hidden');
+  gameStartScore = 0;
 }
 
 function setupInput() {

@@ -329,3 +329,43 @@ body {
   #game-container, #game-canvas { width: 100%; }
   #game-canvas { height: auto; aspect-ratio: 420 / 640; }
 }
+
+/* ── 로그인 폼 ── */
+#landing-login input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(255,255,255,.18);
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+#landing-login input:focus {
+  border-color: var(--teal);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(107,226,200,.15);
+}
+#landing-login input::placeholder { color: var(--muted); }
+#login-submit {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--molten);
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+#login-submit:disabled { opacity: .6; cursor: default; }
+.error-text { color: #ff6b6b; font-size: 13px; }
+
+/* ── 하이스코어 정보 ── */
+#highscore-info {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--molten-2);
+  margin: 4px 0;
+}

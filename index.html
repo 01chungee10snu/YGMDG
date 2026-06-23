@@ -9,7 +9,7 @@
 <meta http-equiv="Expires" content="0">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%94%A5%3C/text%3E%3C/svg%3E">
 <title>용강 만들기</title>
-<link rel="stylesheet" href="style.css?v=2.2.1-live-update">
+<link rel="stylesheet" href="style.css?v=2.3.0-player-db">
 </head>
 <body>
 <main id="app-shell">
@@ -28,6 +28,16 @@
         </ol>
         <button id="landing-ok" type="button">Ok</button>
       </div>
+      <form id="landing-login" class="landing-rules hidden">
+        <h2>플레이어 등록</h2>
+        <p class="small">닉네임과 사번을 입력하세요. 기존 기록이 있으면 하이스코어를 이어받습니다.</p>
+        <label for="input-nickname">닉네임</label>
+        <input id="input-nickname" type="text" maxlength="20" autocomplete="off" required>
+        <label for="input-employee-id">사번</label>
+        <input id="input-employee-id" type="text" maxlength="20" inputmode="numeric" autocomplete="off" required>
+        <p id="login-error" class="small error-text hidden"></p>
+        <button id="login-submit" type="submit">시작</button>
+      </form>
     </div>
   </div>
   <section id="game-container" aria-label="용강 만들기 게임">
@@ -69,6 +79,7 @@
         <div class="game-over-content">
           <h2 id="game-over-title">공정 과밀</h2>
           <p>최종 점수: <span id="final-score">0</span></p>
+          <p id="highscore-info" class="small hidden"></p>
           <p id="game-over-message" class="small">용강까지 이어지는 흐름을 다시 설계하십시오.</p>
           <div id="game-over-recipe" class="hidden">
             <p class="label">RECIPE</p>
@@ -87,7 +98,7 @@
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
 <script>
-  window.YONGGANG_APP_VERSION_HINT = new URLSearchParams(window.location.search).get('v') || '2.2.1-live-update';
+  window.YONGGANG_APP_VERSION_HINT = new URLSearchParams(window.location.search).get('v') || '2.3.0-player-db';
   document.write(`<script src="data/game-data.js?v=${encodeURIComponent(window.YONGGANG_APP_VERSION_HINT)}"><\/script>`);
   document.write(`<script src="main.js?v=${encodeURIComponent(window.YONGGANG_APP_VERSION_HINT)}"><\/script>`);
 </script>

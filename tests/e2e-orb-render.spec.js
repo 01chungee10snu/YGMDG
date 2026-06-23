@@ -92,6 +92,14 @@ function check(name, cond, detail = '') {
     const touchHint = page.locator('#touch-hint');
     if (await touchHint.count()) await touchHint.click();
     await landingOk.click();
+    await page.waitForTimeout(1000);
+  }
+  // Handle login form (nickname + employeeId)
+  const loginForm = page.locator('#landing-login');
+  if (await loginForm.count() && !(await loginForm.evaluate(el => el.classList.contains('hidden')))) {
+    await page.fill('#input-nickname', 'TestPlayer');
+    await page.fill('#input-employee-id', '99999');
+    await page.click('#login-submit');
     await page.waitForTimeout(2400);
   }
   // Drop a few items to ensure canvas has rendered content

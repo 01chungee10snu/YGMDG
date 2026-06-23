@@ -1,6 +1,6 @@
 window.YONGGANG_GAME_DATA = {
   name: '용강 만들기',
-  version: '2.2.1-live-update',
+  version: '2.3.0-player-db',
   physics: {
     radiusPolicy: 'strictly-increasing-tier-radius',
     massPolicy: 'strictly-increasing-nominal-mass',
@@ -11,8 +11,8 @@ window.YONGGANG_GAME_DATA = {
     mode: 'web-app-or-local-fallback',
     spreadsheetId: '1bdcRVCFmTrgMUi-CFj28E-AknJjqb8HxHghfyU_XuB8',
     spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/1bdcRVCFmTrgMUi-CFj28E-AknJjqb8HxHghfyU_XuB8/edit',
-    endpoint: '',
-    schema: ['timestamp', 'player', 'score', 'maxTier', 'durationMs', 'mergeCount', 'quizCorrectCount', 'quizFailReason']
+    endpoint: 'https://script.google.com/macros/s/AKfycbwQB7ySsfp8FgtPr1EQHm3hrq7SztKUE3s6Z30RgkH8cNCREaOoUbhFXBYRsnQn75v4/exec',
+    schema: ['timestamp', 'nickname', 'employeeId', 'startScore', 'endScore', 'maxTier', 'durationMs', 'mergeCount', 'quizCorrectCount', 'quizFailReason']
   },
   scoring: {
     rule: 'roundTo5((2 ** (tierIndex + 1)) * 10 * processMultiplier)',
