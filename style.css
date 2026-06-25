@@ -43,7 +43,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 8px;
 }
 
@@ -51,6 +50,7 @@ body {
   display: flex;
   flex-direction: column;
   width: min(420px, 100%);
+  height: 100%;
   max-height: 100dvh;
   gap: var(--gap);
 }
@@ -142,22 +142,24 @@ body {
 }
 .tier-pip.active { background: linear-gradient(90deg, var(--teal), #b2d8a3); }
 
-/* ═══ Canvas — aspect-ratio 유지 + flex fill ═══ */
+/* ═══ Canvas — aspect-ratio 유지 + 절대 배치로 안정화 ═══ */
 #canvas-wrap {
   position: relative;
   flex: 1 1 0;
   min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  aspect-ratio: 420 / 640;
+  display: block;
 }
 
 #game-canvas {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  aspect-ratio: 420 / 640;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
