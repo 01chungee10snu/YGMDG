@@ -1,23 +1,25 @@
 {
-  "generatedAt": "2026-06-23T06:00:02+09:00",
-  "theme": "Process-accurate Yonggang steel value chain icons: raw materials, coke, blast furnace, hot metal, BOF steelmaking, continuous casting, hot/cold rolled and representative steel products, final Yonggang from user reference image.",
-  "modelIntent": "GPT-image style high-quality game assets via Hermes image generation",
+  "generatedAt": "2026-06-29T05:52:16+09:00",
+  "theme": "Yonggang face v3 steel value chain icons with strict Hyundai Steel Yonggang face-reference grammar",
+  "modelIntent": "GPTImaGen-style reference-guided candidate generation with deterministic sprite/orb compositing",
   "reference": "docs/references/yonggang-character-reference.jpg",
   "prompts": [
     "docs/asset-prompts/01-yonggang-mascot.md",
     "docs/asset-prompts/02-value-chain-sprites-v3.md",
-    "docs/asset-prompts/03-factory-background.md"
+    "docs/asset-prompts/03-factory-background.md",
+    "docs/asset-prompts/yonggang-face-reference.md",
+    "docs/asset-prompts/04-yonggang-face-refresh-v3.md"
   ],
   "assets": [
     {
       "file": "assets/generated/yonggang-mascot.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f503e/1v8Jd0ZKG8xIu94JCJfgd_TK19lsxS.png",
-      "bytes": 593165
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#mascot/yonggang-mascot-v3-selected.png",
+      "bytes": 98070
     },
     {
       "file": "assets/generated/value-chain-sprites.png",
-      "sourceUrl": "composited from process-accurate componentSources, final Yonggang uses user reference cutout",
-      "bytes": 653928
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#composited/value-chain-sprites.png",
+      "bytes": 483934
     },
     {
       "file": "assets/generated/factory-background.png",
@@ -28,67 +30,68 @@
   "componentSources": [
     {
       "file": "assets/generated/components/01-iron-ore.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5cdc/gijxdgBh8w5piqd5UHFe9_dKLZfSmH.png",
-      "bytes": 709660
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/01-iron-ore.png",
+      "bytes": 87598
     },
     {
       "file": "assets/generated/components/02-coal.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5cdd/LIqGS59-l2iOZBNYZwVcJ_KjprP8NH.png",
-      "bytes": 537783
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/02-coal.png",
+      "bytes": 75830
     },
     {
       "file": "assets/generated/components/03-coke.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5cdd/9QZq8RAwoQyG3yO5RE8lv_6Bfkfp3h.png",
-      "bytes": 613983
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/03-coke.png",
+      "bytes": 57690
     },
     {
       "file": "assets/generated/components/04-blast-furnace.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce7/lqDqI_3yC2zXmwsDmmnwE_MC5h0msA.png",
-      "bytes": 761205
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/04-blast-furnace.png",
+      "bytes": 61059
     },
     {
       "file": "assets/generated/components/05-pig-iron-ladle.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5cdf/d9O_5w24VXEBENeuY1cS4_5ATydCLd.png",
-      "bytes": 925938
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/05-pig-iron-ladle.png",
+      "bytes": 78946
     },
     {
       "file": "assets/generated/components/06-steelmaking-converter.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce8/rHVVsy1mxWjuo-AfTGsXD_LGwIMVKV.png",
-      "bytes": 589365
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/06-steelmaking-converter.png",
+      "bytes": 72564
     },
     {
       "file": "assets/generated/components/07-casting-slab.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce9/84GfxsnJQw6MJqnQ8VS6u_iXpnvO1a.png",
-      "bytes": 738049
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/07-casting-slab.png",
+      "bytes": 52092
     },
     {
       "file": "assets/generated/components/08-hot-rolled-coil.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce2/dT2StpaLxXn1sfblnexWX_JjS1qlkS.png",
-      "bytes": 793040
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/08-hot-rolled-coil.png",
+      "bytes": 118413
     },
     {
       "file": "assets/generated/components/09-cold-rolled-auto-sheet.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce3/51CixK-FAvmibMkUYedVP_3YYREHNF.png",
-      "bytes": 728909
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/09-cold-rolled-auto-sheet.png",
+      "bytes": 102750
     },
     {
       "file": "assets/generated/components/10-heavy-plate.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce5/y2910wIiv-fGyEa4pz-_Q_Qhz4XYWQ.png",
-      "bytes": 537364
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/10-heavy-plate.png",
+      "bytes": 72293
     },
     {
       "file": "assets/generated/components/11-long-special-products.png",
-      "sourceUrl": "https://v3b.fal.media/files/b/0a9f5ce5/iV_pBYuHniinBTicgNX7q_BTlyVw6o.png",
-      "bytes": 543403
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/11-long-special-products.png",
+      "bytes": 100500
     },
     {
       "file": "assets/generated/components/12-yonggang-final.png",
-      "sourceUrl": "user-attached-reference-cutout: /Users/01chungee10/.hermes/profiles/img/image_cache/img_1b3cbe100ce7.jpg",
-      "bytes": 330748
+      "sourceUrl": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json#components/12-yonggang-final.png",
+      "bytes": 95209
     }
   ],
   "processBasis": [
     "Blast furnace route: iron ore/coke -> hot metal/pig iron -> basic oxygen furnace steelmaking -> continuous casting -> rolling/finishing.",
     "Representative Hyundai Steel product families considered: hot rolled coil, cold rolled/galvanized automotive sheet, heavy plate, H-beam/rebar/rail long products, special steel."
-  ]
+  ],
+  "candidateManifest": "assets/generated/candidates/yonggang-face-refresh-v3/job-manifest.json"
 }

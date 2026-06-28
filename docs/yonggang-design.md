@@ -62,6 +62,8 @@
 
 ## 이미지 자산
 - GPT 이미지 생성 사용.
+- v3 얼굴 개선 기준: 모든 1차 범위 자산은 `docs/references/yonggang-character-reference.jpg`의 얼굴 문법을 따른다. 후보는 `assets/generated/candidates/yonggang-face-refresh-v3/`에 먼저 저장하고, 검수 통과 후 런타임 경로로 승격했다.
+- v3 승격 대상은 마스코트, 12개 컴포넌트, 4×3 스프라이트 시트, 12개 orb 파생물이며 배경 이미지는 이번 범위에서 변경하지 않는다.
 - 생성 파일:
   - `assets/generated/yonggang-mascot.png`
   - `assets/generated/value-chain-sprites.png` — 4×3 공정 정확도 기반 스프라이트 시트
@@ -79,3 +81,4 @@
 - 기존 브라우저 세션에서도 새 `data/game-data.js` 버전이 감지되면 자동 새로고침된다.
 - `node scripts/validate-physics-config.js`가 물리 설정 범위와 필수 필드를 검증한다.
 - `node tests/e2e-physics.spec.js`가 브라우저에서 Matter.js 엔진 설정, 병합 반동 상한, 게임오버 정체 판정을 검증한다.
+- `node scripts/validate-yonggang-face-assets.js --candidate assets/generated/candidates/yonggang-face-refresh-v3`가 v3 후보/승격 에셋의 치수, orb 투명 코너, manifest provenance, contact sheet를 검증한다.

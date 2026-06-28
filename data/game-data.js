@@ -1,6 +1,6 @@
 window.YONGGANG_GAME_DATA = {
   name: '용강 만들기',
-  version: '2.6.0-physics',
+  version: '2.7.0-assets',
   physics: {
     radiusPolicy: 'strictly-increasing-tier-radius',
     massPolicy: 'strictly-increasing-nominal-mass',

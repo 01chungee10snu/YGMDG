@@ -22,3 +22,17 @@
 - 얼굴은 가려지지 않아야 하며 정면에서 선명하게 보여야 한다.
 - 텍스트, 로고, 워터마크, 글자는 생성하지 않는다.
 - 게임 UI에 쓰기 좋게 중앙 피사체, 깨끗한 배경, 선명한 윤곽, 고대비 색상을 유지한다.
+
+## Must-pass QA
+
+Reject a generated asset when any of these are true:
+- the face is side-facing, hidden, or smaller than 18% of the visible object width
+- either eye is missing or not a vertical black oval
+- either eyebrow is missing or rendered as a long line instead of a small warm-brown dot/short oval
+- the mouth is not a tiny black w-shaped smile
+- either cheek is missing or not a large pale cream/yellow circular blush
+- a final Yonggang head asset does not have the shallow U-shaped top notch
+- a final Yonggang head asset does not have one separate floating molten droplet
+- the outline is not thick dark navy/indigo
+- any text, logo, watermark, or Hyundai Steel wordmark appears
+- the asset is visually noisy at 64 px icon scale

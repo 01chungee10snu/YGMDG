@@ -1,0 +1,112 @@
+{
+  "batchId": "yonggang-face-refresh-v3",
+  "createdAt": "2026-06-28T20:51:28.791Z",
+  "generator": "GPTImaGen-style candidate manifest plus Playwright canvas deterministic selected assets",
+  "referenceImages": [
+    {
+      "path": "docs/references/yonggang-character-reference.jpg",
+      "role": "main-subject",
+      "note": "Canonical Yonggang face and body reference; do not copy logo or text."
+    },
+    {
+      "path": "assets/generated/components/12-yonggang-final.png",
+      "role": "style-reference",
+      "note": "Previous final-tier crop for comparison only."
+    },
+    {
+      "path": "assets/generated/value-chain-sprites.png",
+      "role": "style-reference",
+      "note": "Previous 12-tier sprite sheet for process icon context only."
+    }
+  ],
+  "jobs": [
+    {
+      "id": "gptimagen-sheet-candidate",
+      "mode": "text-to-image",
+      "status": "partial",
+      "prompt_used": "Generate a 4x3 Yonggang face v3 steelmaking sprite sheet using the face contract in docs/asset-prompts/04-yonggang-face-refresh-v3.md.",
+      "output_paths": [
+        "assets/generated/candidates/yonggang-face-refresh-v3/gptimagen-sheet-candidate.png"
+      ],
+      "note": "Kept as GPTImaGen-style provenance. Not promoted because the generated sheet retained an H mark on the final Yonggang and was not the exact runtime size."
+    },
+    {
+      "id": "deterministic-yonggang-face-v3-selected-assets",
+      "mode": "gptimagen-assisted-vector-composite",
+      "status": "success",
+      "prompt_used": "Render selected Yonggang face v3 game assets from docs/asset-prompts/04-yonggang-face-refresh-v3.md, preserving the reference face grammar while excluding text, logos, wordmarks, and H marks.",
+      "output_paths": [
+        "assets/generated/candidates/yonggang-face-refresh-v3/mascot/yonggang-mascot-v3-selected.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/01-iron-ore.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/02-coal.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/03-coke.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/04-blast-furnace.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/05-pig-iron-ladle.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/06-steelmaking-converter.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/07-casting-slab.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/08-hot-rolled-coil.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/09-cold-rolled-auto-sheet.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/10-heavy-plate.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/11-long-special-products.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/components/12-yonggang-final.png"
+      ]
+    },
+    {
+      "id": "deterministic-yonggang-face-v3-composited",
+      "mode": "canvas-composite",
+      "status": "success",
+      "prompt_used": "Compose the selected Yonggang face v3 component assets into a 1024x768 4x3 sprite sheet and 12 circular 256x256 orb icons with transparent corners.",
+      "output_paths": [
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/value-chain-sprites.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/01-iron-ore-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/02-coal-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/03-coke-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/04-blast-furnace-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/05-pig-iron-ladle-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/06-steelmaking-converter-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/07-casting-slab-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/08-hot-rolled-coil-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/09-cold-rolled-auto-sheet-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/10-heavy-plate-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/11-long-special-products-orb.png",
+        "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/12-yonggang-final-orb.png"
+      ]
+    }
+  ],
+  "selectedOutputs": [
+    "assets/generated/candidates/yonggang-face-refresh-v3/mascot/yonggang-mascot-v3-selected.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/01-iron-ore.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/02-coal.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/03-coke.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/04-blast-furnace.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/05-pig-iron-ladle.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/06-steelmaking-converter.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/07-casting-slab.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/08-hot-rolled-coil.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/09-cold-rolled-auto-sheet.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/10-heavy-plate.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/11-long-special-products.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/components/12-yonggang-final.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/value-chain-sprites.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/01-iron-ore-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/02-coal-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/03-coke-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/04-blast-furnace-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/05-pig-iron-ladle-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/06-steelmaking-converter-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/07-casting-slab-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/08-hot-rolled-coil-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/09-cold-rolled-auto-sheet-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/10-heavy-plate-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/11-long-special-products-orb.png",
+    "assets/generated/candidates/yonggang-face-refresh-v3/composited/components-orb/12-yonggang-final-orb.png"
+  ],
+  "rejectedOutputs": [
+    {
+      "path": "assets/generated/candidates/yonggang-face-refresh-v3/gptimagen-sheet-candidate.png",
+      "reason": "Generated sheet had an H mark on the final Yonggang and required deterministic cleanup before runtime promotion."
+    }
+  ],
+  "promotionStatus": "promoted-runtime-assets",
+  "promotedAt": "2026-06-28T20:52:16.882Z"
+}
